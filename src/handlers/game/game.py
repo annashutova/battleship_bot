@@ -28,7 +28,7 @@ async def start_game(message: types.Message, state: FSMContext):
         return
 
     # посылаем координату на бэк
-    strike_result = await strike_coord(*coord)
+    strike_result = await strike(*coord)
     # выводим поле противника с результатом выстрела
     board = await get_opponent_board(access_token)
 
@@ -55,17 +55,23 @@ async def start_game(message: types.Message, state: FSMContext):
     else:
         while True:
             #делаем запрос на бэк, получаем результат: попадание или нет
-            ai_strike = await 
-    # выводится поле юзера с результатом выстрела
+            ai_strike = await ai_move()
+            # выводится поле юзера с результатом выстрела
+
+            if ai_strike == 1:
+                break
     
     # продолжается, пока у одного из игроков не закончатся корабли
     
-async def strike_coord(coord: Tuple[int, int]) -> int:
+async def strike(coord: Tuple[int, int]) -> int:
     # посылаем координату на бэк
     print(*coord)
 
     # получаем ответ
     # 1-промах
     # 3-попадание
-    # 0-корабль потоплен
-    return 0
+    # 5-корабль потоплен
+    return 1
+
+async def ai_move() -> int:
+    return 1
