@@ -56,8 +56,10 @@ async def start_game(message: types.Message, state: FSMContext):
         while True:
             #делаем запрос на бэк, получаем результат: попадание или нет
             ai_strike = await ai_move()
+
             # выводится поле юзера с результатом выстрела
 
+            # если ии промахивается, выходим из цикла
             if ai_strike == 1:
                 break
     
