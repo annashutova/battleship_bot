@@ -1,42 +1,58 @@
 import asyncio
-import os
-import sys
+import logging
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
 
-# Get the directory of the current script
-current_dir = os.path.dirname(os.path.abspath(__file__))
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-# Navigate to the project directory
-project_dir = os.path.dirname(current_dir)
-
-# Add the project directory to the Python path
-sys.path.append(project_dir)
-
-from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.redis import RedisStorage
-from redis.asyncio.client import Redis
-
-from src.handlers.main.router import main_router
-from src.handlers.game.router import game_router
-from conf.config import settings
+from src.api.tg.router import tg_router
+from src.integrations.tg_bot import bot
+from src.middleware.logger import LogServerMiddleware
+from src.on_startup.logger import setup_logger
+from src.on_startup.webhook import setup_webhook
+from src.utils.background_tasks import tg_background_tasks
 
 
-bot = Bot(token=settings.BOT_TOKEN)
-
-redis = Redis(
-    host='localhost',
-    port=6379,
-    db=1,
-)
-
-storage = RedisStorage(redis)
-dp = Dispatcher(storage=storage)
-
-dp.include_routers(main_router, game_router)
-
-
-async def main():
-    await dp.start_polling(bot)
+def setup_middleware(app: FastAPI) -> None:
+    app.add_middleware(
+        LogServerMiddleware,
+    )
+    # CORS Middleware should be the last.
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=['*'],  # type: ignore
+        allow_credentials=True,  # type: ignore
+        allow_methods=['*'],  # type: ignore
+        allow_headers=['*'],  # type: ignore
+    )
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+def setup_routers(app: FastAPI) -> None:
+    app.include_router(tg_router)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    print('START APP')
+    await setup_webhook(bot)
+    setup_logger()
+
+    yield
+
+    logging.info('Stopping')
+
+    while len(tg_background_tasks) > 0:
+        logging.info('%s tasks left', len(tg_background_tasks))
+        await asyncio.sleep(0)
+
+    logging.info('Stopped')
+
+
+def create_app() -> FastAPI:
+    app = FastAPI(docs_url='/swagger', lifespan=lifespan)
+
+    setup_middleware(app)
+    setup_routers(app)
+
+    return app

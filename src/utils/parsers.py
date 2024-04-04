@@ -17,9 +17,14 @@ def parse_coordinates(coords: str, ship_size: int = None) -> List[Tuple[int, int
     if not coords or not coords.isalnum():
         raise ValueError("Invalid input format")
     
+    # Check ship length for the placement
     if ship_size:
         if ship_size * 2 != len(coords):
-            raise ValueError("Invalid number of coordinates")
+            raise ValueError("Invalid number of coordinates for this ship")
+    # Check for the strike
+    else:
+        if len(coords) != 2:
+            raise ValueError("There must be 1 coordinate for a strike")
 
     for i in range(0, len(coords), 2):
         letter = coords[i].upper()

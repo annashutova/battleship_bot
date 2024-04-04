@@ -5,7 +5,7 @@ RANDOM_SETUP = 'Рандомно'
 MANUAL_SETUP = 'Вручную'
 
 
-def get_keyboard() -> types.ReplyKeyboardMarkup:
+def get_setup_keyboard() -> types.ReplyKeyboardMarkup:
     kb = [
         [types.KeyboardButton(text=RANDOM_SETUP)],
         [types.KeyboardButton(text=MANUAL_SETUP)],
