@@ -15,8 +15,8 @@ services:
     volumes:
       - .:/code
     networks:
-      - sirius_network
+      - battleship_backend_battleship-network
 
 networks:
-  sirius_network:
-    external: True
+  battleship_backend_battleship-network:
+    external: true

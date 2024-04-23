@@ -9,7 +9,7 @@ WORKDIR /code
 RUN /usr/local/bin/python -m pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir poetry==1.3.2
 
-COPY pyproject.toml poetry.lock /code/
+COPY pyproject.toml /code/
 
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --without dev \
@@ -20,5 +20,3 @@ RUN poetry config virtualenvs.create false \
 FROM base AS test
 
 RUN poetry install --no-interaction --no-ansi --with dev
-
-USER 1001

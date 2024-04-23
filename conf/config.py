@@ -2,17 +2,19 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    BACKEND_HOST: str = 'http://172.0.0.4:8000'
+    BACKEND_HOST: str
 
-    BOT_TOKEN: str = ''
+    BOT_TOKEN: str
     WEBHOOK_URL: str = ''
 
-    REDIS_HOST: str = 'localhost'
-    REDIS_PORT: int = 6379
-    REDIS_PASSWORD: str =''
-    REDIS_DB: int = 0
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_PASSWORD: str
+    REDIS_DB: int
 
-    LOG_LEVEL: str = 'debug'
+    METRICS_PORT: int
+
+    LOG_LEVEL: str
 
     RETRY_COUNT: int = 3
 

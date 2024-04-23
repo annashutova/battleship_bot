@@ -19,12 +19,9 @@ class AuthMiddleware(BaseMiddleware):
         state: FSMContext = data['state']
         access_token = (await state.get_data()).get('access_token')
 
-        if (
-            access_token is None
-            and (not data.get('command') or data['command'].command !='start')
-        ):
+        if access_token is None and (not data.get('command') or data['command'].command != 'start'):
             bot: Bot = data['bot']
-            await bot.send_message(text='Не авторизованы', chat_id=data['event_chat'].id)
+            await bot.send_message(text='Вы не авторизованы', chat_id=data['event_chat'].id)
             raise SkipHandler('Unauthorized')
 
         if access_token is not None:
