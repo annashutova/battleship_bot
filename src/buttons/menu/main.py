@@ -1,6 +1,5 @@
 from aiogram import types
 
-
 RANDOM_SETUP = 'Рандомно'
 MANUAL_SETUP = 'Вручную'
 
