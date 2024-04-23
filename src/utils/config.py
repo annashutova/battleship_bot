@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 BOARD_STATES = {
     '0': '🌊',
     '1': '⭕️',

@@ -6,6 +6,7 @@ from multidict import CIMultiDict
 
 from src.logger import correlation_id_ctx, logger
 from src.middleware.auth import access_token_cxt
+from src.middleware.metrics import integration_latency
 
 from conf.config import settings
 
@@ -20,8 +21,13 @@ class ClientSessionWithCorrId(aiohttp.ClientSession):
         return headers
 
 
+@integration_latency
 async def do_request(
-    url: str, params: Optional[Dict[str, Any]] = None, headers: Optional[Dict[str, Any]] = None, method: str = 'POST'
+    url: str,
+    json_data: Optional[Dict[str, Any]] = None,
+    headers: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+    method: str = 'POST',
 ) -> Any:
     try:
         headers_ = {'Authorization': f'Bearer {access_token_cxt.get()}'}
@@ -41,8 +47,9 @@ async def do_request(
                 async with session.request(
                     method,
                     url,
+                    params=params,
                     headers=headers_,
-                    json=params,
+                    json=json_data,
                 ) as response:
                     response.raise_for_status()
 
