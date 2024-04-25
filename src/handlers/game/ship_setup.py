@@ -82,6 +82,7 @@ async def manual_setup(message: types.Message, state: FSMContext) -> None:
             ship_types = (
                 await do_request(
                     f'{settings.BACKEND_HOST}/game/setup_rules',
+                    method='GET',
                 )
             )[
                 'data'
