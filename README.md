@@ -37,3 +37,8 @@ LOG_LEVEL=debug
 
 - По умолчанию запуск производится через `polling`;
 - Для запуска через `webhook` в .env файле необходимо раскомментировать WEBHOOK_URL и записать вместо `your_webhook_url` белый IP, настроенный на переадресацию `BIND_PORT`.
+
+4. Находясь в папке `battleship_bot` поднимите докер:
+```shell
+docker compose up --build
+``` 
