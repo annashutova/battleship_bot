@@ -1,6 +1,18 @@
 version: '3.9'
 
 services:
+  nginx:
+    build:
+      dockerfile: nginx/Dockerfile
+      context: .
+    ports:
+      - "81:80"
+      - "443:443"
+    depends_on:
+      - bot
+    networks:
+      - sirius_network
+
   bot:
     container_name: bot
     build:
