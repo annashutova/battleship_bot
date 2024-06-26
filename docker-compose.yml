@@ -1,25 +1,12 @@
 version: '3.9'
 
 services:
-  nginx:
-    build:
-      dockerfile: nginx/Dockerfile
-      context: .
-    ports:
-      - "81:80"
-      - "443:443"
-    depends_on:
-      - bot
-    networks:
-      - sirius_network
-
   bot:
-    container_name: bot
     build:
       dockerfile: docker/Dockerfile
       context: .
     ports:
-      - "8005:8005"
+      - "8105:8105"
     command: scripts/web/startup.sh -m -l
     restart: on-failure
     env_file:
